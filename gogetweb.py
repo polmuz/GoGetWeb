@@ -7,6 +7,8 @@ import requests
 
 import lxml.html
 
+from store import Store
+
 
 class Not200Exception(Exception): pass
 
@@ -49,9 +51,30 @@ def load_profiles(file_name):
     return profiles
 
 
+def compare_contents(profile_name, config, store):
+    old_version = store.get(profile_name)
+
+    data = fetch_profile(profile_name, config)
+
+    if old_version and old_version != data:
+        print("{}: New data!".format(profile_name))
+        print(data)
+        store.save(profile_name, data)
+
+    elif not old_version:
+        print("{}: Data saved for the first time!".format(profile_name))
+        print(data)
+        store.save(profile_name, data)
+
+    else:
+        print("{}: No changes".format(profile_name))
+
+
 if __name__ == "__main__":
     profiles_file_name = sys.argv[1]
     profiles = load_profiles(profiles_file_name)
 
+    store = Store(sys.argv[2])
+
     for name, config in profiles.items():
-        print(fetch_profile(name, config))
+        compare_contents(name, config, store)
