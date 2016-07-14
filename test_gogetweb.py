@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from gogetweb import get_webpage_content, Not200Exception
+from gogetweb import get_webpage_content, extract_xpaths, Not200Exception
 
 
 class TestGetWebpageContent(unittest.TestCase):
@@ -38,3 +38,47 @@ class TestGetWebpageContent(unittest.TestCase):
 
         with self.assertRaises(Exception):
             content = get_webpage_content("http://test.url")
+
+
+
+class TestExtractXpath(unittest.TestCase):
+
+    def test_base(self):
+
+        content = """
+        <html>
+          <body>
+            <h1>Title!</h1>
+            <p>Bla</p>
+          </body>
+        </html>
+        """
+
+        xpaths = {
+            "title": "//h1"
+        }
+
+        extracted = extract_xpaths(content, xpaths)
+
+        self.assertEqual(extracted, {"title": "Title!"})
+
+
+    def test_multiple_elements(self):
+
+        content = """
+        <html>
+          <body>
+            <h1>Title!</h1>
+            <p>Bla</p>
+            <p>Ble</p>
+          </body>
+        </html>
+        """
+
+        xpaths = {
+            "description": "//p"
+        }
+
+        extracted = extract_xpaths(content, xpaths)
+
+        self.assertEqual(extracted, {"description": "Bla\nBle"})
