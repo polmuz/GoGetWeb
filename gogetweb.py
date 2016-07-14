@@ -1,21 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import json
+
 import requests
 
 import lxml.html
 
+
 class Not200Exception(Exception): pass
-
-
-PROFILES = {
-    'Chuck Norris Wikipedia': {
-        'url': 'https://en.wikipedia.org/wiki/Chuck_Norris',
-        'extract': {
-            'title': '//*[@id="firstHeading"]',
-            'description': '//*[@id="mw-content-text"]/p[1]'
-        }
-    }
-}
 
 
 def get_webpage_content(url):
@@ -49,6 +42,16 @@ def fetch_profile(name, config):
     return extract_xpaths(content, config['extract'])
 
 
+def load_profiles(file_name):
+    with open(file_name) as f:
+        profiles = json.loads(f.read())
+
+    return profiles
+
+
 if __name__ == "__main__":
-    print(fetch_profile('Chuck Norris Wikipedia',
-                        PROFILES['Chuck Norris Wikipedia']))
+    profiles_file_name = sys.argv[1]
+    profiles = load_profiles(profiles_file_name)
+
+    for name, config in profiles.items():
+        print(fetch_profile(name, config))

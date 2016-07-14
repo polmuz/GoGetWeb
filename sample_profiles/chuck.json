@@ -1,0 +1,9 @@
+{
+    "Chuck Norris Wikipedia": {
+        "url": "https://en.wikipedia.org/wiki/Chuck_Norris",
+        "extract": {
+            "title": "//*[@id=\"firstHeading\"]",
+            "description": "//*[@id=\"mw-content-text\"]/p[1]"
+        }
+    }
+}
