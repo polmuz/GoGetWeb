@@ -70,11 +70,17 @@ def compare_contents(profile_name, config, store):
         print("{}: No changes".format(profile_name))
 
 
-if __name__ == "__main__":
-    profiles_file_name = sys.argv[1]
+def get_web(profiles_file_name, store_file_name):
     profiles = load_profiles(profiles_file_name)
 
-    store = Store(sys.argv[2])
+    store = Store(store_file_name)
 
     for name, config in profiles.items():
         compare_contents(name, config, store)
+
+
+if __name__ == "__main__":
+    profiles_file_name = sys.argv[1]
+    store_file_name = sys.argv[2]
+
+    get_web(profiles_file_name, store_file_name)
