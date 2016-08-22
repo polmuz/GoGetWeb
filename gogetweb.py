@@ -25,11 +25,13 @@ def compare_contents(profile_name, config, store):
         logging.info("{}: New data!".format(profile_name))
         logging.info(data)
         store.save(profile_name, data)
+        return data
 
     elif not old_version:
         logging.info("{}: Data saved for the first time!".format(profile_name))
         logging.info(data)
         store.save(profile_name, data)
+        return data
 
     else:
         logging.info("{}: No changes".format(profile_name))
@@ -41,7 +43,14 @@ def get_web(profiles_file_name, store_file_name):
     store = Store(store_file_name)
 
     for name, config in profiles.items():
-        compare_contents(name, config, store)
+        data = compare_contents(name, config, store)
+        print("data", data)
+        if data:
+            print("{} has new data!".format(name))
+            for k, v in data.items():
+                print("{}: {}".format(k, v))
+        else:
+            print("{} has no changes...".format(name))
 
 
 if __name__ == "__main__":
